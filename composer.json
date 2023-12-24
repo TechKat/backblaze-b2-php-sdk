@@ -1,0 +1,25 @@
+{
+    "name": "techkat/backblaze-b2-php-sdk",
+    "description": "A PHP SDK to utilize the Backblaze B2 API in a PHP-based application.",
+    "type": "library",
+    "require": {
+      "php": ">=7.0.0",
+      "nesbot/carbon": "^2.16",
+      "guzzlehttp/guzzle": "^6.5 || ^7.0",
+      "illuminate/cache": ">=10.0",
+      "illuminate/container": ">=10.0",
+      "illuminate/filesystem": ">=10.0"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "TechKat\\BackblazeB2\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Craig McKie"
+        }
+    ],
+    "minimum-stability": "dev"
+}
