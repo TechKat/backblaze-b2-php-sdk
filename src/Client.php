@@ -46,7 +46,7 @@ class Client {
 
   protected $keyId, $applicationKey, $accountId;
   protected $authTokenTimeout, $authorizationToken;
-  protected $client, $version, $apiUrl;
+  protected $client, $version, $apiUrl, $s3ApiUrl;
   protected $cache, $downloadUrl, $recommendedPartSize;
 
   protected $loadedFromCache = true;
@@ -61,20 +61,18 @@ class Client {
   |--------------------------------------------------------------------------
   | @param  (string) $keyId | Default: (empty)
   | @param  (string) $applicationKey | Default: (empty)
-  | @param  (string) $accountId | Default: (empty)
   | @param  (string) $options | Default: array()
   | @return (empty) | TechKat\BackblazeB2\Exceptions\AuthorizeClientException
   |--------------------------------------------------------------------------
   |
   */
-  public function __construct(string $keyId = '', string $applicationKey = '', string $accountId = '', array $options = [])
+  public function __construct(string $keyId = '', string $applicationKey = '', array $options = [])
   {
     /*
-     * Store the three main parameters as a varible within the class.
+     * Store the two main parameters as a varible within the class.
     */
     $this->keyId = $keyId;
     $this->applicationKey = $applicationKey;
-    $this->accountId = $accountId;
 
     /*
      * Set a length of time in seconds for how long an authorizationToken
@@ -107,7 +105,6 @@ class Client {
      * Unless forceReauthorization is true, or the previous authorizationToken
      * has expired and a new one needs to be generated, return the currently
      * stored authorizationToken from cache.
-     */
     */
     $this->createCacheContainer();
     $this->authorizeAccount($forceRefresh);
@@ -160,10 +157,13 @@ class Client {
        * Store authorizationToken, apiUrl, downloadURL and recommendedPartSize to cache
       */
       $this->cache->put($cacheKey, [
-        'authToken'           => $response['authorizationToken'],
-        'apiUrl'              => $response['apiUrl'],
-        'downloadUrl'         => $response['downloadUrl'],
-        'recommendedPartSize' => $response['recommendedPartSize'],
+        'accountId'               => $response['accountId'],
+        'absoluteMinimumPartSize' => $response['absoluteMinimumPartSize'],
+        'authToken'               => $response['authorizationToken'],
+        'apiUrl'                  => $response['apiUrl'],
+        'downloadUrl'             => $response['downloadUrl'],
+        'recommendedPartSize'     => $response['recommendedPartSize'],
+        's3ApiUrl'                => $response['s3ApiUrl'],
       ], $this->authTokenTimeout);
 
       /*
@@ -182,10 +182,13 @@ class Client {
     /*
      * Store the necessary response to variables for use in the SDK.
     */
-    $this->authorizationToken   = $store['authToken'];
-    $this->apiUrl               = $store['apiUrl'];
-    $this->downloadUrl          = $store['downloadUrl'];
-    $this->recommendedPartSize  = $store['recommendedPartSize'];
+    $this->accountId                = $store['accountId'];
+    $this->absoluteMinimumPartSize  = $store['absoluteMinimumPartSize'];
+    $this->authorizationToken       = $store['authToken'];
+    $this->apiUrl                   = $store['apiUrl'];
+    $this->downloadUrl              = $store['downloadUrl'];
+    $this->recommendedPartSize      = $store['recommendedPartSize'];
+    $this->s3ApiUrl                 = $store['s3ApiUrl'];
   }
 
   /*
@@ -201,7 +204,7 @@ class Client {
   |--------------------------------------------------------------------------
   |
   */
-  private function createCacheContainer(): mixed
+  private function createCacheContainer()
   {
     /*
      * define the cache directory at package root
@@ -250,7 +253,7 @@ class Client {
       /*
        * If an error occurs, throw an exception explaining why.
       */
-      throw new CacheException($e->getMessage());
+      return throw new CacheException($e->getMessage());
     }
   }
 
