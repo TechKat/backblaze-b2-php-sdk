@@ -64,4 +64,4 @@ MIT
 
 # Documentation
 
-Please refer to the [wiki](https://github.com/TechKat/backblaze-b2-php-sdk/wiki/Introduction) for more detailed explanations of how to use the library.
+Please refer to the [wiki](https://github.com/TechKat/backblaze-b2-php-sdk/wiki) for more detailed explanations of how to use the library.
