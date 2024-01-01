@@ -44,7 +44,7 @@ class Client {
   const B2_API_V1 = '/b2api/v1/';
   const B2_API_V2 = '/b2api/v2/';
 
-  protected $keyId, $applicationKey, $accountId;
+  protected $keyId, $applicationKey;
   protected $authTokenTimeout, $authorizationToken;
   protected $client, $version, $apiUrl;
   protected $cache, $downloadUrl, $recommendedPartSize;
@@ -61,20 +61,18 @@ class Client {
   |--------------------------------------------------------------------------
   | @param  (string) $keyId | Default: (empty)
   | @param  (string) $applicationKey | Default: (empty)
-  | @param  (string) $accountId | Default: (empty)
   | @param  (string) $options | Default: array()
   | @return (empty) | TechKat\BackblazeB2\Exceptions\AuthorizeClientException
   |--------------------------------------------------------------------------
   |
   */
-  public function __construct(string $keyId = '', string $applicationKey = '', string $accountId = '', array $options = [])
+  public function __construct(string $keyId = '', string $applicationKey = '', array $options = [])
   {
     /*
      * Store the three main parameters as a varible within the class.
     */
     $this->keyId = $keyId;
     $this->applicationKey = $applicationKey;
-    $this->accountId = $accountId;
 
     /*
      * Set a length of time in seconds for how long an authorizationToken
