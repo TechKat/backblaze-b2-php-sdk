@@ -17,6 +17,7 @@ class Bucket
 
   const TYPE_PUBLIC = 'allPublic';
   const TYPE_PRIVATE = 'allPrivate';
+  const TYPE_SNAPSHOT = 'snapshot';
 
   /*
   |--------------------------------------------------------------------------
@@ -39,6 +40,24 @@ class Bucket
     {
       $this->{$key} = $value;
     }
+  }
+
+  /*
+  |--------------------------------------------------------------------------
+  | Get the bucket's account ID
+  |--------------------------------------------------------------------------
+  |
+  | Returns the account ID (owner) of the bucket.
+  |
+  |--------------------------------------------------------------------------
+  | @param  (none)
+  | @return (string)
+  |--------------------------------------------------------------------------
+  |
+  */
+  public function getAccountId()
+  {
+    return $this->accountId;
   }
 
   /*
@@ -79,10 +98,10 @@ class Bucket
 
   /*
   |--------------------------------------------------------------------------
-  | Get bucket's visibility type
+  | Get bucket's type
   |--------------------------------------------------------------------------
   |
-  | Return whether the bucket is private or public.
+  | Return whether the bucket is private, public or snapshot.
   |
   |--------------------------------------------------------------------------
   | @param  (none)
@@ -97,10 +116,10 @@ class Bucket
 
   /*
   |--------------------------------------------------------------------------
-  | Get bucket's revision configuration
+  | Get bucket's revision number
   |--------------------------------------------------------------------------
   |
-  | Return as a JSON object containing the configuration of a bucket's revision settings.
+  | Return the revision number from bucket revisions.
   |
   |--------------------------------------------------------------------------
   | @param  (none)
@@ -129,6 +148,60 @@ class Bucket
   public function getCORSRules()
   {
     return $this->corsRules;
+  }
+
+  /*
+  |--------------------------------------------------------------------------
+  | Get bucket's server-side encryption
+  |--------------------------------------------------------------------------
+  |
+  | Return as a JSON object containing the configuration of a bucket's server-side encryption settings.
+  |
+  |--------------------------------------------------------------------------
+  | @param  (none)
+  | @return (string)
+  |--------------------------------------------------------------------------
+  |
+  */
+  public function getServerSideEncryption()
+  {
+    return $this->defaultServerSideEncryption;
+  }
+
+  /*
+  |--------------------------------------------------------------------------
+  | Get bucket's file lock configuration
+  |--------------------------------------------------------------------------
+  |
+  | Return as a JSON object containing the configuration of a bucket's file-lock settings.
+  |
+  |--------------------------------------------------------------------------
+  | @param  (none)
+  | @return (string)
+  |--------------------------------------------------------------------------
+  |
+  */
+  public function getFileLock()
+  {
+    return $this->fileLockConfiguration;
+  }
+
+  /*
+  |--------------------------------------------------------------------------
+  | Get bucket's replication configuration
+  |--------------------------------------------------------------------------
+  |
+  | Return as a JSON object containing the configuration of a bucket's replication settings.
+  |
+  |--------------------------------------------------------------------------
+  | @param  (none)
+  | @return (string)
+  |--------------------------------------------------------------------------
+  |
+  */
+  public function getReplicationConfig()
+  {
+    return $this->replicationConfiguration;
   }
 
   /*

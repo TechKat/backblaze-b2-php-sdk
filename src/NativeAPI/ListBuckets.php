@@ -35,7 +35,7 @@ trait ListBuckets
 
     foreach($store as &$bucket)
     {
-      $bucketKey = $setArrayKeyAs == 'id' ? $bucket['bucketId'] : $bucket['bucketName'];
+      $bucketKey = $setArrayKeyAs == 'name' ? $bucket['bucketName'] : $bucket['bucketId'];
       $arrayOfBucketObjects[$bucketKey] = new Bucket($bucket);
     }
 
