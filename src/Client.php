@@ -101,12 +101,17 @@ class Client {
     $forceRefresh = (isset($options['forceReauthorization']) && $options['forceReauthorization'] === true) ? true : false;
 
     /*
+     * Use the defined cache directory if one is set, or use the default.
+    */
+    $cacheDir = isset($options['cacheDir']) ? $options['cacheDir'] : __DIR__ . '/Cache';
+
+    /*
      * Create the cache container that opens access to the cache.
      * Unless forceReauthorization is true, or the previous authorizationToken
      * has expired and a new one needs to be generated, return the currently
      * stored authorizationToken from cache.
     */
-    $this->createCacheContainer();
+    $this->createCacheContainer($cacheDir);
     $this->authorizeAccount($forceRefresh);
   }
 
@@ -204,19 +209,14 @@ class Client {
   |--------------------------------------------------------------------------
   |
   */
-  private function createCacheContainer()
+  private function createCacheContainer(string $cacheDir)
   {
-    /*
-     * define the cache directory at package root
-    */
-    $cacheDir = __DIR__ . '/Cache';
-
     /*
      * Check if cache directory exists. If not, create it.
     */
     if(is_dir($cacheDir) === false)
     {
-      mkdir($cacheDir, 0755);
+      mkdir($cacheDir, 0755, true);
     }
 
     /*
