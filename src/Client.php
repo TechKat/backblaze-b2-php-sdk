@@ -204,7 +204,7 @@ class Client {
   | Start the cache container to be able to read and write from the cache.
   |
   |--------------------------------------------------------------------------
-  | @param  (none)
+  | @param  (string) $cacheDir
   | @return (empty)
   |--------------------------------------------------------------------------
   |
