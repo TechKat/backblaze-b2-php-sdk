@@ -55,7 +55,7 @@ class Bucket
   |--------------------------------------------------------------------------
   |
   */
-  public function getAccountId()
+  public function getAccountId(): string
   {
     return $this->accountId;
   }
@@ -73,7 +73,7 @@ class Bucket
   |--------------------------------------------------------------------------
   |
   */
-  public function getId()
+  public function getId(): string
   {
     return $this->bucketId;
   }
@@ -91,7 +91,7 @@ class Bucket
   |--------------------------------------------------------------------------
   |
   */
-  public function getName()
+  public function getName(): string
   {
     return $this->bucketName;
   }
@@ -109,7 +109,7 @@ class Bucket
   |--------------------------------------------------------------------------
   |
   */
-  public function getType()
+  public function getType(): string
   {
     return $this->bucketType;
   }
@@ -123,11 +123,11 @@ class Bucket
   |
   |--------------------------------------------------------------------------
   | @param  (none)
-  | @return (string)
+  | @return (int)
   |--------------------------------------------------------------------------
   |
   */
-  public function getRevision()
+  public function getRevision(): int
   {
     return $this->revision;
   }
@@ -137,15 +137,15 @@ class Bucket
   | Get bucket's CORS rules
   |--------------------------------------------------------------------------
   |
-  | Return as a JSON object containing the configuration of a bucket's CORS settings.
+  | Return as an array containing the configuration of a bucket's CORS settings.
   |
   |--------------------------------------------------------------------------
   | @param  (none)
-  | @return (string)
+  | @return (array)
   |--------------------------------------------------------------------------
   |
   */
-  public function getCORSRules()
+  public function getCORSRules(): array
   {
     return $this->corsRules;
   }
@@ -155,15 +155,15 @@ class Bucket
   | Get bucket's server-side encryption
   |--------------------------------------------------------------------------
   |
-  | Return as a JSON object containing the configuration of a bucket's server-side encryption settings.
+  | Return as an array containing the configuration of a bucket's server-side encryption settings.
   |
   |--------------------------------------------------------------------------
   | @param  (none)
-  | @return (string)
+  | @return (array)
   |--------------------------------------------------------------------------
   |
   */
-  public function getServerSideEncryption()
+  public function getServerSideEncryption(): array
   {
     return $this->defaultServerSideEncryption;
   }
@@ -173,15 +173,15 @@ class Bucket
   | Get bucket's file lock configuration
   |--------------------------------------------------------------------------
   |
-  | Return as a JSON object containing the configuration of a bucket's file-lock settings.
+  | Return as an array containing the configuration of a bucket's file-lock settings.
   |
   |--------------------------------------------------------------------------
   | @param  (none)
-  | @return (string)
+  | @return (array)
   |--------------------------------------------------------------------------
   |
   */
-  public function getFileLock()
+  public function getFileLock(): array
   {
     return $this->fileLockConfiguration;
   }
@@ -191,15 +191,15 @@ class Bucket
   | Get bucket's replication configuration
   |--------------------------------------------------------------------------
   |
-  | Return as a JSON object containing the configuration of a bucket's replication settings.
+  | Return as an array containing the configuration of a bucket's replication settings.
   |
   |--------------------------------------------------------------------------
   | @param  (none)
-  | @return (string)
+  | @return (array)
   |--------------------------------------------------------------------------
   |
   */
-  public function getReplicationConfig()
+  public function getReplicationConfig(): array
   {
     return $this->replicationConfiguration;
   }
@@ -209,15 +209,15 @@ class Bucket
   | Get bucket's lifecycle rules
   |--------------------------------------------------------------------------
   |
-  | Return as a JSON object containing the configuration of a bucket's Life Cycle Rules.
+  | Return as an array containing the configuration of a bucket's Life Cycle Rules.
   |
   |--------------------------------------------------------------------------
   | @param  (none)
-  | @return (string)
+  | @return (array)
   |--------------------------------------------------------------------------
   |
   */
-  public function getLifeCycleRules()
+  public function getLifeCycleRules(): array
   {
     return $this->lifecycleRules;
   }
