@@ -24,7 +24,8 @@ use TechKat\BackblazeB2\Helpers\{GetBucketProperties, Validation};
 
 /* Load Exceptions */
 use Exception;
-use TechKat\BackblazeB2\Exceptions\{AuthorizeClientException, BadNativeApiEndpointException, ValidationException};
+use TechKat\BackblazeB2\Exceptions\{AuthorizeClientException, BadNativeApiEndpointException, FOpenException, ValidationException};
+use GuzzleHttp\Exception\ClientException as GuzzleHttpClientException;
 
 class Client {
 
@@ -254,6 +255,171 @@ class Client {
        * If an error occurs, throw an exception explaining why.
       */
       return throw new CacheException($e->getMessage());
+    }
+  }
+
+  /*
+  |--------------------------------------------------------------------------
+  | Quick Upload Function
+  |--------------------------------------------------------------------------
+  |
+  | A function to be able to quickly upload a file to BackBlaze B2.
+  |
+  |--------------------------------------------------------------------------
+  | @param  (string) $filePath | Default: (empty)
+  | @param  (string) $fileName | Default: (empty)
+  | @param  (string) $bucketId | Default: (empty)
+  | @return TechKat\BackBlazeB2\File | Exception
+  |--------------------------------------------------------------------------
+  |
+  */
+  public function upload(string $filePath = '', string $fileName = '', string $bucketId = ''): File
+  {
+    /*
+     * Get the original filesize and SHA1 hash of the file from filePath.
+    */
+    $fileSize = filesize($filePath);
+    $fileSha1 = sha1_file($filePath);
+
+    /*
+     * Open the file for reading
+    */
+    $fileHandle = fopen($filePath, 'rb');
+
+    if($fileSize <= 3000000000)
+    {
+      /*
+       * Start by getting an upload URL
+      */
+      $uploadUrl = $this->getUploadUrl(['bucketId' => $bucketId]);
+
+      /*
+       * Set options
+      */
+      $options = [
+        'uploadUrl' => $uploadUrl['uploadUrl'],
+        'body'      => fread($fileHandle, $fileSize),
+      ];
+
+      /*
+       * Set headers
+      */
+      $headers = [
+        'Authorization'     => $uploadUrl['authorizationToken'],
+        'Content-Type'      => 'b2/x-auto',
+        'Content-Length'    => $fileSize,
+        'X-Bz-File-Name'    => $fileName,
+        'X-Bz-Content-Sha1' => $fileSha1,
+      ];
+
+      /*
+       * Now let's upload the file to the uploadUrl
+      */
+      $upload = $this->uploadFile($options, $headers);
+
+      /*
+       * At this point, file should be uploaded fully to the BackBlaze B2 Bucket.
+       * Return a new File model of the uploaded file.
+      */
+      return new File($upload);
+    }
+    else
+    {
+      try
+      {
+        /*
+         * Initialize a large file upload by creating an empty object in bucket.
+        */
+        $startLargeFile = $this->startLargeFile([
+          'bucketId' => $bucketId,
+          'fileName' => $fileName,
+        ]);
+
+        /*
+         * Keep track of partNumbers, an array of all part SHA1s, and the fileId from startLargeFile.
+        */
+        $partNumber = 1;
+        $partSha1Array = [];
+        $fileId = $startLargeFile['fileId'];
+
+        /*
+         * Loop through chunks of the large file
+        */
+        while(!feof($fileHandle))
+        {
+          /*
+           * Extract a chunk of data from large file,
+           * and get a part upload URL for it.
+          */
+          $chunkData = fread($fileHandle, 10485760);
+          $partUploadUrl = $this->getUploadPartUrl(['fileId' => $fileId], true);
+
+          /*
+           * Keep a note of the chunk's SHA1 hash, and add the SHA1 to the array.
+          */
+          $partSha1 = sha1($chunkData);
+          $partSha1Array[] = $partSha1;
+
+          /*
+           * Set options
+          */
+          $options = [
+            'uploadPartUrl' => $partUploadUrl['uploadUrl'],
+            'body'          => $chunkData,
+          ];
+
+          /*
+           * Set headers
+          */
+          $headers = [
+            'Authorization'     => $partUploadUrl['authorizationToken'],
+            'Content-Length'    => strlen($chunkData),
+            'X-Bz-Part-Number'  => $partNumber,
+            'X-Bz-Content-Sha1' => $partSha1,
+          ];
+
+          /*
+           * Upload this chunk of data to BackBlaze under the same fileId.
+          */
+          $uploadPart = $this->uploadPart($options, $headers);
+
+          /*
+           * Increment the part number variable.
+          */
+          $partNumber++;
+        }
+
+        /*
+         * Close the file handle
+        */
+        fclose($fileHandle);
+
+        /*
+         * Finish large file upload
+        */
+        $finishLargeFile = $this->finishLargeFile([
+          'fileId' => $fileId,
+          'partSha1Array' => $partSha1Array,
+        ]);
+
+        /*
+         * Return the response of finishLargeFile
+        */
+        return new File($finishLargeFile);
+      }
+      catch(FOpenException | GuzzleHttpClientException | ValidationException $e)
+      {
+        /*
+         * An exception was observed somewhere, but BackBlaze will keep the large file object.
+         * To keep things tidy in a bucket, we will cancel the large file.
+        */
+        $this->cancelLargeFile(['fileId' => $fileId]);
+
+        /*
+         * Return the exception that occurred.
+        */
+        return throw new Exception($e->getMessage());
+      }
     }
   }
 

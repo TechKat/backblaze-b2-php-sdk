@@ -8,7 +8,7 @@ use TechKat\BackblazeB2\File;
 
 trait UploadFile
 {
-  public function uploadFile(string $uploadUrl = '', array $options = [], array $headers = [])
+  public function uploadFile(array $options = [], array $headers = [])
   {
     $mandatoryOptions = ['uploadUrl', 'body'];
     $mandatoryHeaders = ['Authorization', 'X-Bz-File-Name', 'X-Bz-Content-Sha1', 'Content-Length', 'Content-Type'];
@@ -45,7 +45,6 @@ trait UploadFile
       'X-Bz-Server-Side-Encryption-Customer-Key-Md5'   => null,
     ], $headers);
 
-    $response = $this->request('POST', $uploadUrl, $options, $headers);
-    return new File($response);
+    return $this->request('POST', $options['uploadUrl'], $options, $headers);
   }
 }

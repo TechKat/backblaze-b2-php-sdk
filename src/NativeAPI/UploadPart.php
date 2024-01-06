@@ -6,10 +6,10 @@ use TechKat\BackblazeB2\Exceptions\ValidationException;
 
 trait UploadPart
 {
-  public function uploadPart(array $options = [])
+  public function uploadPart(array $options = [], array $headers = [])
   {
     $mandatoryOptions = ['uploadPartUrl', 'body'];
-    $mandatoryHeaders = ['Authorization', 'X-Bz-Part-Number', 'X-Bz-Content-Sha1', 'Content-Length'];
+    $mandatoryHeaders = ['Authorization', 'Content-Length', 'X-Bz-Part-Number', 'X-Bz-Content-Sha1'];
 
     if($this->anyIssetOrEmpty($options, $mandatoryOptions))
     {
