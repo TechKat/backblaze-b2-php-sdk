@@ -276,15 +276,23 @@ class Client {
   public function upload(string $filePath = '', string $fileName = '', string $bucketId = ''): File
   {
     /*
+     * Open the file for reading
+    */
+    $fileHandle = @fopen($filePath, 'rb');
+
+    /*
+     * First check if file is readable.
+    */
+    if(!$fileHandle)
+    {
+      return throw new FOpenException('Could not open file: ' . $filePath);
+    }
+
+    /*
      * Get the original filesize and SHA1 hash of the file from filePath.
     */
     $fileSize = filesize($filePath);
     $fileSha1 = sha1_file($filePath);
-
-    /*
-     * Open the file for reading
-    */
-    $fileHandle = fopen($filePath, 'rb');
 
     if($fileSize <= 3000000000)
     {
@@ -316,6 +324,11 @@ class Client {
        * Now let's upload the file to the uploadUrl
       */
       $upload = $this->uploadFile($options, $headers);
+
+      /*
+       * Close the file handle
+      */
+      fclose($fileHandle);
 
       /*
        * At this point, file should be uploaded fully to the BackBlaze B2 Bucket.
@@ -407,7 +420,7 @@ class Client {
         */
         return new File($finishLargeFile);
       }
-      catch(FOpenException | GuzzleHttpClientException | ValidationException $e)
+      catch(GuzzleHttpClientException | ValidationException $e)
       {
         /*
          * An exception was observed somewhere, but BackBlaze will keep the large file object.
