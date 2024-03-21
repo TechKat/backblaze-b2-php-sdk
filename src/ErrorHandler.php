@@ -11,6 +11,7 @@ class ErrorHandler
   protected static $mappings = [
 
     // Status Code: 400
+    'auth_token_limit'               => \TechKat\BackblazeB2\Exceptions\BackblazeCodes\AuthTokenLimitException::class,
     'bad_bucket_id'                  => \TechKat\BackblazeB2\Exceptions\BackblazeCodes\BadBucketIdException::class,
     'bad_request'                    => \TechKat\BackblazeB2\Exceptions\BackblazeCodes\BadRequestException::class,
     'cannot_delete_non_empty_bucket' => \TechKat\BackblazeB2\Exceptions\BackblazeCodes\BucketNotEmptyException::class,
