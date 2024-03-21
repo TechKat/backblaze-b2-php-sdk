@@ -58,7 +58,7 @@ class Client extends GuzzleClient
      * While loop of retries.
      * If retries variable is above the retryLimit, abandon white loop and continue.
     */
-    while($statusCode === 503 && $this->retryLimit > $retries)
+    while($statusCode == 503 && $this->retryLimit > $retries)
     {
       /*
        * Increase retries count and put script to sleep for X amount of seconds.
@@ -71,7 +71,7 @@ class Client extends GuzzleClient
       */
       $response = parent::request($method, $uri, $options);
       $statusCode = $response->getStatusCode();
-      if($statusCode === 200) break;
+      if($statusCode == 200) break;
 
       /*
        * If we get this far, BackBlaze B2 API is still returning a status code
@@ -84,7 +84,7 @@ class Client extends GuzzleClient
      * If HTTP status code from response is still anything but 200,
      * and we have exceeded our retry limit, throw an exception.
     */
-    if($statusCode !== 200)
+    if($statusCode != 200)
     {
       ErrorHandler::handleErrorResponse($response);
     }
