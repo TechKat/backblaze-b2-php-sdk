@@ -278,7 +278,7 @@ class Client {
     /*
      * Open the file for reading
     */
-    $fileHandle = @fopen($filePath, 'rb');
+    $fileHandle = @fopen($filePath, 'r');
 
     /*
      * First check if file is readable.
