@@ -283,11 +283,20 @@ class Client {
       $initSha1 = hash_init('sha1');
       hash_update_stream($initSha1, $data);
 
+      /*
+      ** Get SHA1 string and content-length from resource.
+      */
       $fileSha1 = hash_final($initSha1);
       $fileSize = fstat($data)['size'];
 
+      /*
+      ** Rewind back to start of file
+      */
       rewind($data);
 
+      /*
+      ** Hold contents of resource stream to variable
+      */
       $fileContents = stream_get_contents($data);
     }
     elseif(file_exists($data))
@@ -311,10 +320,7 @@ class Client {
       /*
       ** Set options
       */
-      $options = [
-        'uploadUrl' => $uploadUrl['uploadUrl'],
-        'body'      => $fileContents,
-      ];
+      $options = ['body' => $fileContents];
 
       /*
       ** Set headers
@@ -330,7 +336,7 @@ class Client {
       /*
       ** Now let's upload the file to the uploadUrl
       */
-      $upload = $this->uploadFile($options, $headers);
+      $upload = $this->uploadFile($uploadUrl['uploadUrl'], $options, $headers);
 
       /*
       ** At this point, file should be uploaded fully to the BackBlaze B2 Bucket.
