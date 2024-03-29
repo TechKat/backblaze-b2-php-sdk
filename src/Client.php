@@ -297,7 +297,7 @@ class Client {
       /*
       ** Hold contents of resource stream to variable
       */
-      $fileContents = stream_get_contents($data);
+      $fileContents = stream_get_contents($data, $fileSize);
     }
     elseif(file_exists($data))
     {
