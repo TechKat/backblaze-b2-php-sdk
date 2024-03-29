@@ -273,7 +273,7 @@ class Client {
   |--------------------------------------------------------------------------
   |
   */
-  public function upload(mixed $data, string $fileName = '', string $bucketId = ''): File
+  public function upload($data, string $fileName = '', string $bucketId = ''): File
   {
     if(is_resource($data))
     {
