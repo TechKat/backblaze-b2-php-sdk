@@ -310,40 +310,37 @@ class Client {
       $fileContents = file_get_contents($data);
     }
 
-    if($fileSize <= 3000000000)
-    {
-      /*
-      ** Start by getting an upload URL
-      */
-      $uploadUrl = $this->getUploadUrl(['bucketId' => $bucketId]);
+    /*
+    ** Start by getting an upload URL
+    */
+    $uploadUrl = $this->getUploadUrl(['bucketId' => $bucketId]);
 
-      /*
-      ** Set options
-      */
-      $options = ['body' => $fileContents];
+    /*
+    ** Set options
+    */
+    $options = ['body' => $fileContents];
 
-      /*
-      ** Set headers
-      */
-      $headers = [
-        'Authorization'     => $uploadUrl['authorizationToken'],
-        'Content-Type'      => 'b2/x-auto',
-        'Content-Length'    => $fileSize,
-        'X-Bz-File-Name'    => $fileName,
-        'X-Bz-Content-Sha1' => $fileSha1,
-      ];
+    /*
+    ** Set headers
+    */
+    $headers = [
+      'Authorization'     => $uploadUrl['authorizationToken'],
+      'Content-Type'      => 'b2/x-auto',
+      'Content-Length'    => $fileSize,
+      'X-Bz-File-Name'    => $fileName,
+      'X-Bz-Content-Sha1' => $fileSha1,
+    ];
 
-      /*
-      ** Now let's upload the file to the uploadUrl
-      */
-      $upload = $this->uploadFile($uploadUrl['uploadUrl'], $options, $headers);
+    /*
+    ** Now let's upload the file to the uploadUrl
+    */
+    $upload = $this->uploadFile($uploadUrl['uploadUrl'], $options, $headers);
 
-      /*
-      ** At this point, file should be uploaded fully to the BackBlaze B2 Bucket.
-      ** Return a new File model of the uploaded file.
-      */
-      return new File($upload);
-    }
+    /*
+    ** At this point, file should be uploaded fully to the BackBlaze B2 Bucket.
+    ** Return a new File model of the uploaded file.
+    */
+    return new File($upload);
   }
 
   /*
