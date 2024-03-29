@@ -4,7 +4,7 @@
     "type": "library",
     "require": {
       "php": ">=7.0.0",
-      "nesbot/carbon": "^2.16",
+      "nesbot/carbon": "^3.0",
       "guzzlehttp/guzzle": "^6.5 || ^7.0",
       "illuminate/cache": ">=10.0",
       "illuminate/container": ">=10.0",
