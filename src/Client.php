@@ -288,7 +288,7 @@ class Client {
 
       rewind($data);
 
-      $fileContent = stream_get_contents($data);
+      $fileContents = stream_get_contents($data);
     }
     elseif(file_exists($data))
     {
@@ -313,7 +313,7 @@ class Client {
       */
       $options = [
         'uploadUrl' => $uploadUrl['uploadUrl'],
-        'body'      => $fileContent,
+        'body'      => $fileContents,
       ];
 
       /*
